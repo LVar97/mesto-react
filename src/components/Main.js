@@ -22,12 +22,14 @@ class Main extends React.Component{
 				userDescription: res.about
 			})
 		})
+		.catch((err) => console.log(err));
 		api.fetchCARDRender('cards')
 		.then((res) => {
 			this.setState({
 				cards: res
 			})
 		})
+		.catch((err) => console.log(err));
 	}
 	
 	

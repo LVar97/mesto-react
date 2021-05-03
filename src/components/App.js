@@ -19,7 +19,6 @@ class App extends React.Component {
   }
 
   handleCardClick = (item) => {
-    console.log(item)
     this.setState({
       selectedCard: item,
       isImagePopupOpen: true

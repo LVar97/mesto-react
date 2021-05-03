@@ -1,14 +1,14 @@
-const handleResponse = (res) => {
-  if (!res.ok) {
-    return Promise.reject(`Error: ${res.status}`);
-  }
-  return res.json();
-}
-
 export default class Api{
 	constructor(options){
 		this._url = options.baseUrl;
 		this._token = options.token;
+	}
+
+	_handleResponse(res) {
+		if (!res.ok) {
+			return Promise.reject(`Error: ${res.status}`);
+		}
+		return res.json();
 	}
 
 	fetchCARDRender (url){
@@ -17,11 +17,10 @@ export default class Api{
 			authorization: this._token
 		}
 	})
-	.then(handleResponse)
+	.then(this._handleResponse)
 	.then((result) => {
 		return result
 	})
-	.catch((err) => {console.log(err)})
 	}
 
 
@@ -31,11 +30,10 @@ export default class Api{
 			authorization: this._token
 		}
 		})
-		.then(handleResponse)
+		.then(this._handleResponse)
 		.then((result) => {
 			return result
 		})
-		.catch((err) => {console.log(err)})
 
 	}
 
@@ -49,10 +47,7 @@ export default class Api{
 			body:JSON.stringify(data)
 			
 		})
-		.then(handleResponse)
-		.catch((err) => {
-			console.log(err); 
-		});
+		.then(this._handleResponse)
 	}
 
 	fetcAddhNewCard(url, data){
@@ -67,11 +62,8 @@ export default class Api{
 				data
 			)	
 		})
-		.then(handleResponse)
+		.then(this._handleResponse)
 		.then(data => {return data})
-		.catch((err) => {
-			console.log(err); 
-		});
 	}
 
 
@@ -83,10 +75,7 @@ export default class Api{
 				'Content-Type': 'application/json'
 			},
 		})
-		.then(handleResponse)
-		.catch((err) => {
-			console.log(err); 
-		});
+		.then(this._handleResponse)
 	}
 
 	fetchAddLike(url, like, id){
@@ -98,10 +87,7 @@ export default class Api{
 				'Content-Type': 'application/json'
 			},
 		})
-		.then(handleResponse)
-		.catch((err) => {
-			console.log(err); 
-		});
+		.then(this._handleResponse)
 	}
 
 	fetchDeleteLike(url, like, id){
@@ -112,10 +98,7 @@ export default class Api{
 				'Content-Type': 'application/json'
 			},
 		})
-		.then(handleResponse)
-		.catch((err) => {
-			console.log(err); 
-		});
+		.then(this._handleResponse)
 	}
 
 	fetchChangeAvatar(url, avatar, data ){
@@ -129,13 +112,10 @@ export default class Api{
 				{avatar: data.avatar }
 			)
 		})
-		.then(handleResponse)
+		.then(this._handleResponse)
 		.then(userAvatar => {
 			return userAvatar;
 	 	})
-		.catch((err) => {
-			console.log(err); 
-		});
 	}
 }
 
