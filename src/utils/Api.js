@@ -79,7 +79,6 @@ export default class Api{
 	}
 
 	fetchAddLike(url, like, id){
-		console.log(url, like, id)
 		return fetch(this._url+url+'/'+ like +id, {
 			method: 'PUT',
 			headers: {
@@ -116,6 +115,16 @@ export default class Api{
 		.then(userAvatar => {
 			return userAvatar;
 	 	})
+	}
+
+	changeLikeCardStatus(card , like) {
+		
+		if (like === true){
+			return api.fetchAddLike('cards', 'likes/', card)
+		}else{
+			return api.fetchDeleteLike('cards', 'likes/', card)
+		}
+
 	}
 }
 
