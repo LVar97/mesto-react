@@ -11,8 +11,8 @@ export default class Api{
 		return res.json();
 	}
 
-	fetchCARDRender (url){
-		return fetch( this._url+url , {
+	renderCards (){
+		return fetch(`${this._url}cards` , {
 		headers: {
 			authorization: this._token
 		}
@@ -24,8 +24,9 @@ export default class Api{
 	}
 
 
-	fetchUserInfo (url){
-		return fetch(this._url+url, {
+	getUserInfo (){
+
+		return fetch(`${this._url}users/me`, {
 		headers: {
 			authorization: this._token
 		}
@@ -37,8 +38,8 @@ export default class Api{
 
 	}
 
-	fetchSaveDataUserInfo(url, data){
-		return fetch(this._url+url, {
+	saveDataUserInfo(data) {
+		return fetch(`${this._url}users/me`, {
 			method: 'PATCH',
 			headers: {
 				authorization: this._token,
@@ -50,9 +51,9 @@ export default class Api{
 		.then(this._handleResponse)
 	}
 
-	fetcAddhNewCard(url, data){
+	addNewCard(data){
 		
-		return fetch(this._url+url, {
+		return fetch(`${this._url}cards`, {
 			method: 'POST',
 			headers: {
 				authorization: this._token,
@@ -67,8 +68,8 @@ export default class Api{
 	}
 
 
-	fetchDeleteCard(url, id){
-		return fetch(this._url+url+'/'+id, {
+	deleteCard(id){
+		return fetch(`${this._url}cards/`+id, {
 			method: 'DELETE',
 			headers: {
 				authorization: this._token,
@@ -78,8 +79,8 @@ export default class Api{
 		.then(this._handleResponse)
 	}
 
-	fetchAddLike(url, like, id){
-		return fetch(this._url+url+'/'+ like +id, {
+	addLike(id){
+		return fetch(`${this._url}cards/likes/`+id, {
 			method: 'PUT',
 			headers: {
 				authorization: this._token,
@@ -88,9 +89,9 @@ export default class Api{
 		})
 		.then(this._handleResponse)
 	}
-
-	fetchDeleteLike(url, like, id){
-		return fetch(this._url+url+'/'+ like +id, {
+	
+	deleteLike(id){
+		return fetch(`${this._url}cards/likes/`+id, {
 			method: 'DELETE',
 			headers: {
 				authorization: this._token,
@@ -100,8 +101,8 @@ export default class Api{
 		.then(this._handleResponse)
 	}
 
-	fetchChangeAvatar(url, avatar, data ){
-		return fetch(this._url + url + avatar, {
+	changeAvatar(data){
+		return fetch(`${this._url}users/me/avatar`, {
 			method: 'PATCH',
 			headers: {
 				authorization: this._token,
@@ -120,9 +121,9 @@ export default class Api{
 	changeLikeCardStatus(card , like) {
 		
 		if (like === true){
-			return api.fetchAddLike('cards', 'likes/', card)
+			return api.addLike(card)
 		}else{
-			return api.fetchDeleteLike('cards', 'likes/', card)
+			return api.deleteLike(card)
 		}
 
 	}

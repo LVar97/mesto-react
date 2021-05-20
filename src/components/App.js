@@ -1,5 +1,4 @@
 import React from 'react';
-import '../index.css';
 import Header from './Header'; 
 import Main from './Main';
 import Footer from './Footer'; 
@@ -20,21 +19,21 @@ class App extends React.Component {
       isEditAvatarPopupOpen: false,
       selectedCard: {},
       isImagePopupOpen: false,
-      currentUser: '',
+      currentUser: {},
       cards: []
     }
   }
   
-  
   componentDidMount(){
-    api.fetchUserInfo('users/me')
+    api.getUserInfo()
     .then((res) => {
       this.setState({
         currentUser: res
 			})
     })
     .catch((err) => console.log(err));
-    api.fetchCARDRender('cards')
+
+    api.renderCards()
 		.then((res) => {	
 			this.setState({
         cards: res
@@ -79,7 +78,7 @@ class App extends React.Component {
   }
 
   handleUpdateUser = (data) => {
-    api.fetchSaveDataUserInfo('users/me', data)
+    api.saveDataUserInfo(data)
     .then((res) => 
       this.setState({
         isEditProfilePopupOpen: false,
@@ -90,7 +89,7 @@ class App extends React.Component {
   }
 
   handleUpdateAvatar = (link) => {
-    api.fetchChangeAvatar('users/me/', 'avatar', link)
+    api.changeAvatar(link)
     .then((res) => 
       this.setState({
         isEditAvatarPopupOpen: false,
@@ -108,33 +107,35 @@ class App extends React.Component {
     // Отправляем запрос в API и получаем обновлённые данные карточки
 		api.changeLikeCardStatus(card._id, !isLiked)
 		.then((newCard) => { 
-      this.setState({
-        cards: this.state.cards.map((el) => el._id  === card._id ? newCard : el)
-      })
+      this.setState((state) => ({
+        cards: state.cards.map((el) => el._id  === card._id ? newCard : el)
+      }))
 		})
 		.catch((err) => console.log(err));
 		
 	}
 
   handleCardDelete = (card) => {
-		api.fetchDeleteCard('cards', card._id)
+		api.deleteCard(card._id)
     .then(() => {
-      this.setState({
-        cards: this.state.cards.filter(function(el){
+      this.setState((state) => ({
+        cards: state.cards.filter(function(el){
           return el._id !== card._id
         })
-      })
+      }))
     })
+    .catch((err) => console.log(err));
 	}
 
   handleAddPlaceSubmit = (data) =>{
-    api.fetcAddhNewCard('cards', data)
+    api.addNewCard(data)
     .then((newCard) => 
-      this.setState({
+      this.setState((state) => ({
         isAddPlacePopupOpen: false,
-        cards: ([newCard, ...this.state.cards])
-      })
+        cards: ([newCard, ...state.cards])
+      }))
     )
+    .catch((err) => console.log(err));
   }
 
   render(){
@@ -151,13 +152,26 @@ class App extends React.Component {
         onCardLike={this.handleCardLike}
         onCardDelete={this.handleCardDelete}/>
         <Footer />
-        <EditProfilePopup onUpdateUser={this.handleUpdateUser} isOpen={this.state.isEditProfilePopupOpen} onClose={this.closeAllPopups} />
-        <AddPlacePopup onAddPlace={this.handleAddPlaceSubmit} isOpen={this.state.isAddPlacePopupOpen} onClose={this.closeAllPopups}/>
-        <EditAvatarPopup onUpdateAvatar={this.handleUpdateAvatar} isOpen={this.state.isEditAvatarPopupOpen} onClose={this.closeAllPopups} />
+        <EditProfilePopup 
+        onUpdateUser={this.handleUpdateUser} 
+        isOpen={this.state.isEditProfilePopupOpen} 
+        onClose={this.closeAllPopups} />
+        <AddPlacePopup 
+        onAddPlace={this.handleAddPlaceSubmit} 
+        isOpen={this.state.isAddPlacePopupOpen} 
+        onClose={this.closeAllPopups}/>
+        <EditAvatarPopup 
+        onUpdateAvatar={this.handleUpdateAvatar} 
+        isOpen={this.state.isEditAvatarPopupOpen} 
+        onClose={this.closeAllPopups} />
         <PopupWithForm name="deletet" title="Вы уверены?">
           <div className="popup__wrapper">[props.children]</div>
         </PopupWithForm>
-        <ImagePopup name="imgcard" card={this.state.selectedCard} onClose={this.closeAllPopups} isOpen={this.state.isImagePopupOpen}/>
+        <ImagePopup 
+        name="imgcard" 
+        card={this.state.selectedCard} 
+        onClose={this.closeAllPopups} 
+        isOpen={this.state.isImagePopupOpen}/>
       </CurrentUserContext.Provider>
     </div>
 

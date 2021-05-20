@@ -6,6 +6,11 @@ function AddPlacePopup(props) {
 	const nameRef = React.useRef();
 	const linkRef = React.useRef();
 
+	React.useEffect(() => {
+		nameRef.current.value = '';
+		linkRef.current.value = '';
+	});
+
 	function handleSubmit(e) {
 		// Запрещаем браузеру переходить по адресу формы
 		e.preventDefault();
@@ -15,8 +20,6 @@ function AddPlacePopup(props) {
 			name: nameRef.current.value,
 			link: linkRef.current.value
 		});
-		nameRef.current.value = '';
-		linkRef.current.value = '';
 	}
 
 	return(
